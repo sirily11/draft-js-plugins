@@ -11,7 +11,7 @@ module.exports = Object.assign(webpackBaseConfig, {
 
   entry: {
     app: [
-      './client/index.js',
+      './client/index.tsx',
     ],
   },
 

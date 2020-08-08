@@ -1,15 +1,15 @@
 /* eslint-disable no-continue,no-restricted-syntax */
-import React, { Component } from 'react';
+import React, {Component, CSSProperties} from 'react';
 import PropTypes from 'prop-types';
-import { EditorState, Editor, DefaultDraftBlockRenderMap } from 'draft-js';
-import { Map } from 'immutable';
+import Draft, {EditorState, Editor, DefaultDraftBlockRenderMap, ContentBlock} from 'draft-js';
+import {Map} from 'immutable';
 import proxies from './proxies';
 import moveSelectionToEnd from './moveSelectionToEnd';
 import resolveDecorators from './resolveDecorators';
 import defaultKeyBindings from './defaultKeyBindings';
 import defaultKeyCommands from './defaultKeyCommands';
 
-const getDecoratorLength = obj => {
+const getDecoratorLength = (obj: any) => {
   let decorators;
 
   if (obj.decorators != null) {
@@ -21,21 +21,43 @@ const getDecoratorLength = obj => {
   return decorators.size != null ? decorators.size : decorators.length;
 };
 
+interface Plugin{
+  customStyleMap: {[name: string]: CSSProperties}
+}
+
+interface Props {
+  defaultBlockRenderMap: boolean,
+  blockRenderMap: boolean,
+  defaultKeyBindings: boolean,
+  defaultKeyCommands: boolean,
+  customStyleMap: { [name: string]: CSSProperties },
+  plugins: Plugin[],
+  decorators: any,
+  editorState: EditorState,
+  onChange: any,
+  readOnly: boolean,
+  placeholder: string,
+}
+
+interface State {
+  readOnly: boolean
+}
+
 /**
  * The main editor component
  */
-class PluginEditor extends Component {
-  static propTypes = {
-    editorState: PropTypes.object.isRequired,
-    onChange: PropTypes.func.isRequired,
-    plugins: PropTypes.array,
-    defaultKeyBindings: PropTypes.bool,
-    defaultKeyCommands: PropTypes.bool,
-    defaultBlockRenderMap: PropTypes.bool,
-    customStyleMap: PropTypes.object,
-    // eslint-disable-next-line react/no-unused-prop-types
-    decorators: PropTypes.array,
-  };
+export class PluginEditor extends Component<Props, State> {
+  // static propTypes = {
+  //   editorState: PropTypes.object.isRequired,
+  //   onChange: PropTypes.func.isRequired,
+  //   plugins: PropTypes.array,
+  //   defaultKeyBindings: PropTypes.bool,
+  //   defaultKeyCommands: PropTypes.bool,
+  //   defaultBlockRenderMap: PropTypes.bool,
+  //   customStyleMap: PropTypes.object,
+  //   // eslint-disable-next-line react/no-unused-prop-types
+  //   decorators: PropTypes.array,
+  // };
 
   static defaultProps = {
     defaultBlockRenderMap: true,
@@ -46,7 +68,9 @@ class PluginEditor extends Component {
     decorators: [],
   };
 
-  constructor(props) {
+  private editor: any;
+
+  constructor(props: Props) {
     super(props);
 
     const plugins = [this.props, ...this.resolvePlugins()];
@@ -57,10 +81,13 @@ class PluginEditor extends Component {
 
     // attach proxy methods like `focus` or `blur`
     proxies.forEach(method => {
+      // @ts-ignore
       this[method] = (...args) => this.editor[method](...args);
     });
 
-    this.state = {}; // TODO for Nik: ask ben why this is relevent
+    this.state = {
+      readOnly: props.readOnly
+    };
   }
 
   UNSAFE_componentWillMount() {
@@ -70,11 +97,11 @@ class PluginEditor extends Component {
       this.onChange
     );
 
-    const editorState = EditorState.set(this.props.editorState, { decorator });
+    const editorState = EditorState.set(this.props.editorState, {decorator});
     this.onChange(moveSelectionToEnd(editorState));
   }
 
-  UNSAFE_componentWillReceiveProps(next) {
+  UNSAFE_componentWillReceiveProps(next: Props) {
     const curr = this.props;
     const currDec = curr.editorState.getDecorator();
     const nextDec = next.editorState.getDecorator();
@@ -98,7 +125,7 @@ class PluginEditor extends Component {
   }
 
   componentWillUnmount() {
-    this.resolvePlugins().forEach(plugin => {
+    this.resolvePlugins().forEach((plugin: any) => {
       if (plugin.willUnmount) {
         plugin.willUnmount({
           getEditorState: this.getEditorState,
@@ -110,9 +137,9 @@ class PluginEditor extends Component {
 
   // Cycle through the plugins, changing the editor state with what the plugins
   // changed (or didn't)
-  onChange = editorState => {
+  onChange = (editorState: EditorState) => {
     let newEditorState = editorState;
-    this.resolvePlugins().forEach(plugin => {
+    this.resolvePlugins().forEach((plugin) => {
       if (plugin.onChange) {
         newEditorState = plugin.onChange(
           newEditorState,
@@ -127,12 +154,12 @@ class PluginEditor extends Component {
   };
 
   getPlugins = () => this.props.plugins.slice(0);
-  getProps = () => ({ ...this.props });
+  getProps = () => ({...this.props});
 
   // TODO further down in render we use readOnly={this.props.readOnly || this.state.readOnly}. Ask Ben why readOnly is here just from the props? Why would plugins use this instead of just taking it from getProps?
   getReadOnly = () => this.props.readOnly;
-  setReadOnly = readOnly => {
-    if (readOnly !== this.state.readOnly) this.setState({ readOnly });
+  setReadOnly = (readOnly: boolean) => {
+    if (readOnly !== this.state.readOnly) this.setState({readOnly});
   };
 
   getEditorRef = () => this.editor;
@@ -149,19 +176,24 @@ class PluginEditor extends Component {
     getEditorRef: this.getEditorRef,
   });
 
-  createEventHooks = (methodName, plugins) => (...args) => {
+  createEventHooks = (methodName: string, plugins: Plugin[]) => (...args: any[]) => {
     const newArgs = [].slice.apply(args);
+    // @ts-ignore
     newArgs.push(this.getPluginMethods());
+
 
     return plugins.some(
       plugin =>
+        // @ts-ignore
         typeof plugin[methodName] === 'function' &&
+        // @ts-ignore
         plugin[methodName](...newArgs) === true
     );
   };
 
-  createHandleHooks = (methodName, plugins) => (...args) => {
+  createHandleHooks = (methodName: string, plugins: any[]) => (...args: any[]) => {
     const newArgs = [].slice.apply(args);
+    // @ts-ignore
     newArgs.push(this.getPluginMethods());
 
     return plugins.some(
@@ -173,30 +205,31 @@ class PluginEditor extends Component {
       : 'not-handled';
   };
 
-  createFnHooks = (methodName, plugins) => (...args) => {
+  createFnHooks = (methodName: string, plugins: any[]) => (...args: any[]) => {
     const newArgs = [].slice.apply(args);
 
+    // @ts-ignore
     newArgs.push(this.getPluginMethods());
 
     if (methodName === 'blockRendererFn') {
-      let block = { props: {} };
+      let block: any = {props: {}};
       plugins.forEach(plugin => {
         if (typeof plugin[methodName] !== 'function') return;
         const result = plugin[methodName](...newArgs);
         if (result !== undefined && result !== null) {
-          const { props: pluginProps, ...pluginRest } = result; // eslint-disable-line no-use-before-define
-          const { props, ...rest } = block; // eslint-disable-line no-use-before-define
+          const {props: pluginProps, ...pluginRest} = result; // eslint-disable-line no-use-before-define
+          const {props, ...rest} = block; // eslint-disable-line no-use-before-define
           block = {
             ...rest,
             ...pluginRest,
-            props: { ...props, ...pluginProps },
+            props: {...props, ...pluginProps},
           };
         }
       });
 
       return block.component ? block : false;
     } else if (methodName === 'blockStyleFn') {
-      let styles;
+      let styles: string | undefined;
       plugins.forEach(plugin => {
         if (typeof plugin[methodName] !== 'function') return;
         const result = plugin[methodName](...newArgs);
@@ -218,10 +251,10 @@ class PluginEditor extends Component {
   };
 
   createPluginHooks = () => {
-    const pluginHooks = {};
-    const eventHookKeys = [];
-    const handleHookKeys = [];
-    const fnHookKeys = [];
+    const pluginHooks: { [name: string]: any } = {};
+    const eventHookKeys: string[] = [];
+    const handleHookKeys: string[] = [];
+    const fnHookKeys: string[] = [];
     const plugins = [this.props, ...this.resolvePlugins()];
 
     plugins.forEach(plugin => {
@@ -271,11 +304,11 @@ class PluginEditor extends Component {
   };
 
   resolvePlugins = () => {
-    const plugins = this.props.plugins.slice(0);
-    if (this.props.defaultKeyBindings === true) {
+    const plugins: any[] = this.props.plugins.slice(0);
+    if (this.props.defaultKeyBindings) {
       plugins.push(defaultKeyBindings);
     }
-    if (this.props.defaultKeyCommands === true) {
+    if (this.props.defaultKeyCommands) {
       plugins.push(defaultKeyCommands);
     }
 
@@ -284,7 +317,7 @@ class PluginEditor extends Component {
 
   resolveCustomStyleMap = () =>
     this.props.plugins
-      .filter(plug => plug.customStyleMap !== undefined)
+      .filter((plug) => plug.customStyleMap !== undefined)
       .map(plug => plug.customStyleMap)
       .concat([this.props.customStyleMap])
       .reduce(
@@ -295,10 +328,10 @@ class PluginEditor extends Component {
         {}
       );
 
-  resolveblockRenderMap = () => {
+  resolveBlockRenderMap = () => {
     let blockRenderMap = this.props.plugins
-      .filter(plug => plug.blockRenderMap !== undefined)
-      .reduce((maps, plug) => maps.merge(plug.blockRenderMap), Map({}));
+      .filter((plug: any) => plug.blockRenderMap !== undefined)
+      .reduce((maps: any, plug: any) => maps.merge(plug.blockRenderMap), Map({}));
     if (this.props.defaultBlockRenderMap) {
       blockRenderMap = DefaultDraftBlockRenderMap.merge(blockRenderMap);
     }
@@ -309,12 +342,12 @@ class PluginEditor extends Component {
   };
 
   resolveAccessibilityProps = () => {
-    let accessibilityProps = {};
+    let accessibilityProps: any = {};
     const plugins = [this.props, ...this.resolvePlugins()];
     plugins.forEach(plugin => {
       if (typeof plugin.getAccessibilityProps !== 'function') return;
       const props = plugin.getAccessibilityProps();
-      const popupProps = {};
+      const popupProps: any = {};
 
       if (accessibilityProps.ariaHasPopup === undefined) {
         popupProps.ariaHasPopup = props.ariaHasPopup;
@@ -342,7 +375,7 @@ class PluginEditor extends Component {
     const pluginHooks = this.createPluginHooks();
     const customStyleMap = this.resolveCustomStyleMap();
     const accessibilityProps = this.resolveAccessibilityProps();
-    const blockRenderMap = this.resolveblockRenderMap();
+    const blockRenderMap = this.resolveBlockRenderMap();
     return (
       <Editor
         {...this.props}
@@ -360,5 +393,3 @@ class PluginEditor extends Component {
     );
   }
 }
-
-export default PluginEditor;

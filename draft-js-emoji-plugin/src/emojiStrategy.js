@@ -3,6 +3,6 @@ import emojione from 'emojione';
 
 const unicodeRegex = new RegExp(emojione.unicodeRegexp, 'g');
 
-export default (contentBlock: Object, callback: Function) => {
+export default (contentBlock, callback) => {
   findWithRegex(unicodeRegex, contentBlock, callback);
 };

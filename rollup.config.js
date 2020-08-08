@@ -2,7 +2,7 @@ import path from 'path';
 import nodeResolve from 'rollup-plugin-node-resolve';
 import babel from 'rollup-plugin-babel';
 
-const input = './src/index.js';
+const input = './src/index.tsx';
 const external = id => !id.startsWith('.') && !path.isAbsolute(id);
 
 export default [
