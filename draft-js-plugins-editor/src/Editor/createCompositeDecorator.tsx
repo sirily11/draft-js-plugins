@@ -4,13 +4,18 @@
 
 import React from 'react';
 import { List } from 'immutable';
-import { CompositeDecorator } from 'draft-js';
+import Draft, {CompositeDecorator, EditorState, DraftDecorator} from 'draft-js';
 
-export default (decorators, getEditorState, setEditorState) => {
+type GetEditorState = () => EditorState
+type SetEditorState = (editorState: EditorState) => void
+
+export default (decorators: DraftDecorator[], getEditorState: GetEditorState, setEditorState: SetEditorState) => {
   const convertedDecorators = List(decorators)
     .map(decorator => {
+      //@ts-ignore
       const Component = decorator.component;
-      const DecoratedComponent = props => (
+
+      const DecoratedComponent = (props: any) => (
         <Component
           {...props}
           getEditorState={getEditorState}

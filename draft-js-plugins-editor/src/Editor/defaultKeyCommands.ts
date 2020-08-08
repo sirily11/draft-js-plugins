@@ -1,12 +1,17 @@
-import { RichUtils } from 'draft-js';
+import {DraftHandleValue, EditorState, RichUtils} from 'draft-js';
+import {EditorCommand} from "../interfaces";
+
 
 export default {
   // handle delete commands
   handleKeyCommand: (
-    command,
-    editorState,
-    eventTimeStamp,
-    { setEditorState }
+    command: EditorCommand,
+    editorState: EditorState,
+    eventTimeStamp: number,
+    {
+      // @ts-ignore
+      setEditorState
+    }
   ) => {
     let newState;
     switch (command) {

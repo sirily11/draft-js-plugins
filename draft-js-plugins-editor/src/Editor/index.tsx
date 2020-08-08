@@ -1,13 +1,15 @@
 /* eslint-disable no-continue,no-restricted-syntax */
 import React, {Component, CSSProperties} from 'react';
 import PropTypes from 'prop-types';
-import Draft, {EditorState, Editor, DefaultDraftBlockRenderMap, ContentBlock} from 'draft-js';
+import Draft, {EditorState, Editor, DefaultDraftBlockRenderMap, DraftDecorator,} from 'draft-js';
 import {Map} from 'immutable';
 import proxies from './proxies';
 import moveSelectionToEnd from './moveSelectionToEnd';
 import resolveDecorators from './resolveDecorators';
 import defaultKeyBindings from './defaultKeyBindings';
 import defaultKeyCommands from './defaultKeyCommands';
+import {DraftEditorProps} from '../interfaces';
+
 
 const getDecoratorLength = (obj: any) => {
   let decorators;
@@ -21,22 +23,26 @@ const getDecoratorLength = (obj: any) => {
   return decorators.size != null ? decorators.size : decorators.length;
 };
 
-interface Plugin{
-  customStyleMap: {[name: string]: CSSProperties}
+interface Plugin {
+  customStyleMap: { [name: string]: CSSProperties }
+
+  initialize(functions: any): void;
+
+  onChange(editorState: EditorState, functions: any): EditorState;
+
+  willUnmount(functions: any): void;
+
+  decorators: DraftDecorator[];
+
+  getAccessibilityProps(): { ariaHasPopup: string, ariaExpanded: any }
 }
 
-interface Props {
+interface Props extends DraftEditorProps {
+  onChange: any;
+  plugins: Plugin[];
   defaultBlockRenderMap: boolean,
-  blockRenderMap: boolean,
   defaultKeyBindings: boolean,
   defaultKeyCommands: boolean,
-  customStyleMap: { [name: string]: CSSProperties },
-  plugins: Plugin[],
-  decorators: any,
-  editorState: EditorState,
-  onChange: any,
-  readOnly: boolean,
-  placeholder: string,
 }
 
 interface State {
@@ -73,7 +79,8 @@ export class PluginEditor extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
-    const plugins = [this.props, ...this.resolvePlugins()];
+    // @ts-ignore
+    const plugins: Plugin[] = [this.props, ...this.resolvePlugins()];
     plugins.forEach(plugin => {
       if (typeof plugin.initialize !== 'function') return;
       plugin.initialize(this.getPluginMethods());
@@ -86,7 +93,7 @@ export class PluginEditor extends Component<Props, State> {
     });
 
     this.state = {
-      readOnly: props.readOnly
+      readOnly: props.readOnly ?? false
     };
   }
 
@@ -176,7 +183,7 @@ export class PluginEditor extends Component<Props, State> {
     getEditorRef: this.getEditorRef,
   });
 
-  createEventHooks = (methodName: string, plugins: Plugin[]) => (...args: any[]) => {
+  createEventHooks = (methodName: string, plugins: ((Readonly<Props> & Readonly<{ children?: React.ReactNode }>) | Plugin)[]) => (...args: any[]) => {
     const newArgs = [].slice.apply(args);
     // @ts-ignore
     newArgs.push(this.getPluginMethods());
@@ -304,24 +311,28 @@ export class PluginEditor extends Component<Props, State> {
   };
 
   resolvePlugins = () => {
-    const plugins: any[] = this.props.plugins.slice(0);
+    const plugins: Plugin[] = this.props.plugins.slice(0);
     if (this.props.defaultKeyBindings) {
+      //@ts-ignore
       plugins.push(defaultKeyBindings);
     }
     if (this.props.defaultKeyCommands) {
+      //@ts-ignore
       plugins.push(defaultKeyCommands);
     }
 
     return plugins;
   };
 
+
   resolveCustomStyleMap = () =>
+    // @ts-ignore
     this.props.plugins
       .filter((plug) => plug.customStyleMap !== undefined)
       .map(plug => plug.customStyleMap)
       .concat([this.props.customStyleMap])
       .reduce(
-        (styles, style) => ({
+        (styles: { [name: string]: React.CSSProperties; }, style: { [name: string]: React.CSSProperties; }) => ({
           ...styles,
           ...style,
         }),
@@ -343,8 +354,10 @@ export class PluginEditor extends Component<Props, State> {
 
   resolveAccessibilityProps = () => {
     let accessibilityProps: any = {};
-    const plugins = [this.props, ...this.resolvePlugins()];
+    //@ts-ignore
+    const plugins: Plugin[] = [this.props, ...this.resolvePlugins()];
     plugins.forEach(plugin => {
+
       if (typeof plugin.getAccessibilityProps !== 'function') return;
       const props = plugin.getAccessibilityProps();
       const popupProps: any = {};
