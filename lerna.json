@@ -1,5 +1,9 @@
 {
-  "packages": ["./draft-js-base-plugin", "./draft-js-plugins-editor"],
+  "packages": [
+    "./draft-js-base-plugin",
+    "./draft-js-plugins-editor",
+    "./draft-js-color-plugin"
+  ],
   "version": "1.0.2",
   "publish": {
     "ignoreChanges": ["*.md"],
