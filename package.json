@@ -10,5 +10,9 @@
   "license": "ISC",
   "devDependencies": {
     "lerna": "^3.22.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@github.com/sirily11/draft-js-plugins.git"
   }
 }
