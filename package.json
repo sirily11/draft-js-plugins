@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "publish": "lerna publish from-package --yes --registry https://npm.pkg.github.com/sirily11"
   },
   "author": "",
   "license": "ISC",
