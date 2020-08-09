@@ -1,28 +1,33 @@
 /* eslint-disable react/no-children-prop */
-import React, { Component } from 'react';
-import { RichUtils } from 'draft-js';
-import clsx from 'clsx';
+import React, { Component } from "react";
+import { RichUtils, EditorState } from "draft-js";
+import {} from "../../../index";
+import clsx from "clsx";
 
-export default ({ style, children }) =>
-  class InlineStyleButton extends Component {
-    toggleStyle = event => {
+export interface ButtonProps {
+  getEditorState(): EditorState;
+  onOverrideContent(value: any): void;
+  setEditorState(state: EditorState): void;
+  theme: any;
+}
+
+export default ({ style, children }: { style: any; children: any[] }) =>
+  class InlineStyleButton extends Component<ButtonProps> {
+    toggleStyle = (event: React.MouseEvent) => {
       event.preventDefault();
       this.props.setEditorState(
         RichUtils.toggleInlineStyle(this.props.getEditorState(), style)
       );
     };
 
-    preventBubblingUp = event => {
+    preventBubblingUp = (event: React.MouseEvent) => {
       event.preventDefault();
     };
 
     // we check if this.props.getEditorstate is undefined first in case the button is rendered before the editor
     styleIsActive = () =>
       this.props.getEditorState &&
-      this.props
-        .getEditorState()
-        .getCurrentInlineStyle()
-        .has(style);
+      this.props.getEditorState().getCurrentInlineStyle().has(style);
 
     render() {
       const { theme } = this.props;

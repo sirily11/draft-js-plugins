@@ -1,18 +1,19 @@
 /* eslint-disable react/no-children-prop */
-import React, { Component } from 'react';
-import { RichUtils } from 'draft-js';
-import clsx from 'clsx';
+import React, { Component } from "react";
+import { RichUtils } from "draft-js";
+import clsx from "clsx";
+import { ButtonProps } from "./createInlineStyleButton";
 
-export default ({ blockType, children }) =>
-  class BlockStyleButton extends Component {
-    toggleStyle = event => {
+export default ({ blockType, children }: { blockType: any; children: any[] }) =>
+  class BlockStyleButton extends Component<ButtonProps> {
+    toggleStyle = (event: React.MouseEvent) => {
       event.preventDefault();
       this.props.setEditorState(
         RichUtils.toggleBlockType(this.props.getEditorState(), blockType)
       );
     };
 
-    preventBubblingUp = event => {
+    preventBubblingUp = (event: React.MouseEvent) => {
       event.preventDefault();
     };
 
