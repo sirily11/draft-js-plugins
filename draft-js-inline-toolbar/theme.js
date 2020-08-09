@@ -1,4 +1,4 @@
-import { css } from 'linaria';
+import { css } from "linaria";
 
 const buttonStyles = {
   buttonWrapper: css`
@@ -47,7 +47,7 @@ const toolbarStyles = {
       top: 100%;
       left: 50%;
       border: solid transparent;
-      content: ' ';
+      content: " ";
       height: 0;
       width: 0;
       position: absolute;
@@ -64,6 +64,26 @@ const toolbarStyles = {
       border-top-color: #ddd;
       border-width: 6px;
       margin-left: -6px;
+    }
+  `,
+  toolbarNoTriangle: css`
+    position: absolute;
+    border: 1px solid #ddd;
+    background: #fff;
+    border-radius: 2px;
+    box-shadow: 0px 1px 3px 0px rgba(220, 220, 220, 1);
+    z-index: 5000;
+    box-sizing: border-box;
+    &:after,
+    &:before {
+      top: 100%;
+      left: 50%;
+      border: solid transparent;
+      content: " ";
+      height: 0;
+      width: 0;
+      position: absolute;
+      pointer-events: none;
     }
   `,
 };
