@@ -1,49 +1,24 @@
 {
-  "name": "draft-js-plugins-editor",
-  "version": "1.0.1",
-  "description": "Editor for DraftJS Plugins",
-  "author": {
-    "name": "Nik Graf",
-    "email": "nik@nikgraf.com",
-    "url": "http://www.nikgraf.com"
+  "name": "@sirily11/draft-js-plugin-editor",
+  "version": "1.0.2",
+  "description": "",
+  "main": "build/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepublish": "tsc"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/draft-js-plugins/draft-js-plugins.git"
+    "url": "ssh://git@github.com/sirily11/draft-js-plugins.git",
+    "directory": "draft-js-base-plugin/"
   },
-  "main": "lib/index.cjs.js",
-  "module": "lib/index.esm.js",
-  "files": [
-    "lib"
-  ],
-  "keywords": [
-    "editor",
-    "wysiwyg",
-    "draft",
-    "react",
-    "ux",
-    "components",
-    "widget",
-    "react-component"
-  ],
-  "scripts": {
-    "clean": "../node_modules/.bin/rimraf lib",
-    "build": "yarn clean && yarn build:js && yarn build:ts",
-    "build:js": "../node_modules/.bin/rollup --config ../rollup.config.js",
-    "build:ts": "../node_modules/.bin/cpx src/*.d.ts lib/",
-    "prepublish": "yarn build"
-  },
-  "license": "MIT",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "dependencies": {
-    "immutable": "~3.7.4",
-    "prop-types": "^15.5.8"
-  },
-  "peerDependencies": {
-    "draft-js": "^0.11.0",
-    "react": "^16.3.0"
-  },
-  "devDependencies": {
-    "@types/draft-js": "^0.10.34"
-  },
-  "gitHead": "7657748c75945d26e3cde050a315d21975cdac22"
+    "draft-js": "^0.11.6"
+  }
 }
