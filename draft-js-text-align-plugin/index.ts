@@ -1,7 +1,13 @@
 import {TextAlignLeftButton, TextAlignCenterButton, TextAlignRightButton} from "./buttons";
 import {ContentBlock, DraftBlockRenderMap} from "draft-js";
-import {AdditionalProps, BasePlugin, DraftBlockProps, DraftBlockRenderComponent, NotImplemented} from "../base-plugin";
-import TextAlignCenterComponent from "./components/TextAlignCenterComponent";
+import {
+    AdditionalProps,
+    BasePlugin,
+    DraftBlockProps,
+    DraftBlockRenderComponent,
+    NotImplemented
+} from "../draft-js-base-plugin";
+import TextAlignComponent from "./components/TextAlignComponent";
 
 export {
     TextAlignLeftButton,
@@ -24,11 +30,37 @@ export class TextAlignPlugin extends BasePlugin {
 
     blockRendererFn = <TextAlignProps>(block?: ContentBlock, additional?: AdditionalProps): DraftBlockRenderComponent | NotImplemented | undefined => {
         if (block && additional) {
-            if(block.getType() === "text-left"){
+            let text = block.getText()
+            if (block.getType() === "text-left") {
+                return {
+                    component: TextAlignComponent,
+                    editable: true,
+                    props: {
+                        text: text,
+                        alignment: "left"
+                    }
+                }
 
-            } else if(block.getType() === "text-center"){
+            } else if (block.getType() === "text-center") {
+                return {
+                    component: TextAlignComponent,
+                    editable: true,
+                    props: {
+                        text: text,
+                        alignment: "center"
+                    }
+                }
 
-            } else if(block.getType() === 'text-right'){
+            } else if (block.getType() === 'text-right') {
+
+                return {
+                    component: TextAlignComponent,
+                    editable: true,
+                    props: {
+                        text: text,
+                        alignment: "right"
+                    }
+                }
 
             }
         }

@@ -5,7 +5,7 @@ import ClearIcon from '@material-ui/icons/Clear';
 import {EditorState, Modifier, RichUtils} from 'draft-js';
 import {Grid, ClickAwayListener} from "@material-ui/core";
 import {styleMap} from "../styleMap";
-import {ExternalProps} from "../../base-plugin/interfaces";
+import {ExternalProps} from "../../draft-js-base-plugin/interfaces";
 
 
 const colors = ["#f44336", "#e91e63", "#9c27b0",

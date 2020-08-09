@@ -1,5 +1,5 @@
 import {styleMap} from "./styleMap";
-import {BasePlugin} from "../base-plugin";
+import {BasePlugin} from "../draft-js-base-plugin";
 
 export {PickColorButton} from "./components/PickColorButton"
 
