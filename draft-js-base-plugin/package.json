@@ -23,5 +23,6 @@
   "license": "ISC",
   "dependencies": {
     "draft-js": "^0.11.6"
-  }
+  },
+  "gitHead": "0422e8b38f4a016c8b61ddf900fd83303f19dc43"
 }
