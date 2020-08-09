@@ -6,7 +6,7 @@ import {
     DraftBlockProps,
     DraftBlockRenderComponent,
     NotImplemented
-} from "../draft-js-base-plugin";
+} from "../draft-js-base-plugin/lib/src";
 import TextAlignComponent from "./components/TextAlignComponent";
 
 export {

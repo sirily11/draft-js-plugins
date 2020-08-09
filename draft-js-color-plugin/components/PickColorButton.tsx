@@ -3,7 +3,7 @@ import PaletteIcon from '@material-ui/icons/Palette';
 import ColorPicker from "./ColorPicker";
 import {ContentBlock} from "draft-js";
 import {styleMap} from "../styleMap";
-import {ExternalProps} from "../../draft-js-base-plugin/interfaces";
+import {ExternalProps} from "../../draft-js-base-plugin/src/interfaces";
 
 
 

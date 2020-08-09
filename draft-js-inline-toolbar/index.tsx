@@ -7,7 +7,7 @@ import {
   AdditionalProps,
   BasePlugin,
   NotImplemented,
-} from "../draft-js-base-plugin";
+} from "../draft-js-base-plugin/lib/src";
 import { EditorState } from "draft-js";
 
 export class InlineToolbarPlugin extends BasePlugin {

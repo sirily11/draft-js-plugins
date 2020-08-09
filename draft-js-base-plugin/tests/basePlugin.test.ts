@@ -1,4 +1,4 @@
-import {AdditionalProps, BasePlugin} from "../index";
+import {AdditionalProps, BasePlugin} from "../src/index";
 import {ContentBlock} from "draft-js";
 
 class TestPlugin extends BasePlugin {

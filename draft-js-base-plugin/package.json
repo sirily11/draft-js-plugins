@@ -1,0 +1,27 @@
+{
+  "name": "@sirily11/draft-js-base-plugin",
+  "version": "1.0.1",
+  "description": "",
+  "main": "lib/index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepublish": "tsc"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@github.com/sirily11/draft-js-plugins.git",
+    "directory": "draft-js-base-plugin/"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "draft-js": "^0.11.6"
+  }
+}

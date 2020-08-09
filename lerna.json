@@ -1,0 +1,9 @@
+{
+  "packages": ["./draft-js-base-plugin", "./draft-js-plugins-editor"],
+  "version": "1.0.0",
+  "publish": {
+    "ignoreChanges": ["*.md"],
+    "message": "chore(release): publish",
+    "registry": "https://npm.pkg.github.com"
+  }
+}
