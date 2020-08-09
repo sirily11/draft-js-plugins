@@ -1,14 +1,9 @@
 {
-  "packages": [
-    "./draft-js-base-plugin",
-    "./draft-js-plugins-editor"
-  ],
-  "version": "1.0.1",
+  "packages": ["./draft-js-base-plugin", "./draft-js-plugins-editor"],
+  "version": "1.0.2",
   "publish": {
-    "ignoreChanges": [
-      "*.md"
-    ],
+    "ignoreChanges": ["*.md"],
     "message": "chore(release): publish",
-    "registry": "https://npm.pkg.github.com"
+    "registry": "https://npm.pkg.github.com/sirily11"
   }
 }
