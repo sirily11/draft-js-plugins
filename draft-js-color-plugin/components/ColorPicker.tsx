@@ -4,7 +4,7 @@ import DoneIcon from '@material-ui/icons/Done';
 import ClearIcon from '@material-ui/icons/Clear';
 import {EditorState, Modifier, RichUtils} from 'draft-js';
 import {Grid, ClickAwayListener} from "@material-ui/core";
-import {styleMap} from "../styleMap";
+import {styleMap} from "../src/styleMap";
 import {ExternalProps} from "../../draft-js-base-plugin/src/interfaces";
 
 

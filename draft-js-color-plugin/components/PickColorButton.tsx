@@ -2,7 +2,7 @@ import React from "react";
 import PaletteIcon from '@material-ui/icons/Palette';
 import ColorPicker from "./ColorPicker";
 import {ContentBlock} from "draft-js";
-import {styleMap} from "../styleMap";
+import {styleMap} from "../src/styleMap";
 import {ExternalProps} from "../../draft-js-base-plugin/src/interfaces";
 
 
